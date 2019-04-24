@@ -1,0 +1,130 @@
+USERS:
+
+"/users/create" [POST]
+  -Create a user
+  -requires:
+    -email
+    -username
+    -password
+  -does
+    -makes password hash
+    -puts this info in database
+  -returns
+    -user_id
+    -token
+
+"/users/login" [POST]
+  -logs in
+  -requires
+    -username
+    -password attempt
+  -does
+    -gets user_id
+    -generates auth_token
+  -returns
+    -user_id
+    -auth_token
+
+"/users/password/change" [POST]
+  -allows a user to change their password
+  -requires
+    -user_id
+    -old password
+    -new password
+  -does
+    -checks old password against stored
+    -updates password to new one
+  -returns
+    -some sort of indication for success
+
+"/users/password/forgot" [???]
+  -some way for a user to reset their password.
+  -not sure how this is gonna work yet
+
+"/users/profile" [POST] (because auth token)
+  -shows a user their profile
+  -requires
+    -user_id
+    -auth_token
+  -does
+    -retrieves a user's posts/comments
+  -returns
+    -an object showing what all the user has posted
+
+THREADS
+
+"/threads/post" [POST]
+  -posts a thread to the app
+  -requires
+    -location
+    -thread text
+    -user_id
+  -does
+    -inserts thread into db
+  -returns
+    -some indication of success
+
+"/threads/view/single" [GET]
+  -views a single thread and its comments
+  -requires
+    -thread_id
+  -does
+    -retrieves a thread and its comments with whatever name has been tied to them in the db
+  -returns
+    -a thread object with comments
+
+
+"/threads/view/all" [GET]
+  -views all threads within defined radius
+  -requires
+    -location
+    -radius
+  -does
+    -retrieves all threads within given radius. no commetns
+  -returns
+    -a list of thread objects
+
+"/threads/vote"[POST]
+  -allows a user to vote on a thread
+  -requires
+    -thread_id
+    -user_id
+    -auth_token
+    -vote
+  -does
+    -updates a users vote if it exists
+    -inserts vote if necessary
+  -returns
+    -some indication of success
+
+COMMENTS
+
+"/comments/post" [POST]
+  -post a comment on a give thread
+  -requires
+    -user_id
+    -thread_id
+    -auth_token
+  -does
+    -post a comment
+    -generates a username if user doesn't already have one for this thread
+  -returns
+    -some indication of success
+
+"/vote/comment" [POST]
+  -vote on a given comment
+  -requires
+    -user_id
+    -comment_id
+    -auth_token
+    -vote
+  -does
+    -updates a user's vote if it exists
+    -inserts vote if necessary
+  -returns
+    -some indicator of success
+
+
+
+for votes
+insert, check for error, if error, update
